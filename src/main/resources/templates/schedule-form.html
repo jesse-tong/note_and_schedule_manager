@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/default :: layout (~{::title},~{::content})}">
+<head>
+  <title th:fragment="title" th:text="${schedule.id}!=null? 'Edit Schedule':'Add Schedule'">Schedule</title>
+</head>
+<body>
+  <div th:fragment="content">
+    <h2 th:text="${schedule.id}!=null? 'Edit Schedule':'Add Schedule'"></h2>
+    <form th:action="${schedule.id}!=null? @{/schedules/edit/{id}(id=${schedule.id})} : @{/schedules/save}"
+          th:object="${schedule}" method="post">
+      <div class="mb-3">
+        <label class="form-label">Title</label>
+        <input th:field="*{title}" class="form-control" required/>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea th:field="*{description}" class="form-control" rows="3"></textarea>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Start Time</label>
+        <input type="datetime-local" th:field="*{startTime}" class="form-control"
+               th:value="${schedule.startTime != null ? schedule.startTime.format(T(java.time.format.DateTimeFormatter).ofPattern('yyyy-MM-dd''T''HH:mm')) : ''}" required/>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">End Time</label>
+        <input type="datetime-local" th:field="*{endTime}" class="form-control"
+               th:value="${schedule.endTime != null ? schedule.endTime.format(T(java.time.format.DateTimeFormatter).ofPattern('yyyy-MM-dd''T''HH:mm')) : ''}" required/>
+      </div>
+      <button type="submit" class="btn btn-success">Save</button>
+      <a th:href="@{/schedules}" class="btn btn-secondary">Cancel</a>
+
+      <!-- show delete only when editing an existing schedule -->
+      <th:block th:if="${schedule.id} != null">
+        <button type="button"
+                class="btn btn-danger"
+                data-bs-toggle="modal"
+                data-bs-target="#deleteModal">
+          Delete
+        </button>
+      </th:block>
+
+      <!-- Delete Confirmation Modal -->
+      <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              Are you sure you want to delete this schedule?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <form th:action="@{/schedules/delete/{id}(id=${schedule.id})}" method="post" style="display:inline">
+                <input type="hidden" name="_method" value="delete"/>
+                <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

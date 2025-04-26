@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/default :: layout (~{::title},~{::content})}">
+<head>
+  <title th:fragment="title"
+         th:text="'View Schedule: ' + ${schedule.title}">Schedule View</title>
+</head>
+<body>
+  <div th:fragment="content">
+    <h2 th:text="${schedule.title}">Schedule Title</h2>
+    <p><strong>Description:</strong>
+       <span th:text="${schedule.description}">…</span>
+    </p>
+    <p><strong>Start Time:</strong>
+       <span th:if="${schedule.startTime != null}"
+             th:text="${schedule.startTime.format(T(java.time.format.DateTimeFormatter).ofPattern('yyyy-MM-dd HH:mm'))}">…</span>
+    </p>
+    <p><strong>End Time:</strong>
+       <span th:if="${schedule.endTime != null}"
+             th:text="${schedule.endTime.format(T(java.time.format.DateTimeFormatter).ofPattern('yyyy-MM-dd HH:mm'))}"></span>
+    </p>
+    <p><strong>Created:</strong>
+       <span th:if="${schedule.createdAt != null}"
+             th:text="${schedule.createdAt.format(T(java.time.format.DateTimeFormatter).ofPattern('yyyy-MM-dd HH:mm'))}">…</span>
+    </p>
+    <p><strong>Updated:</strong>
+       <span th:if="${schedule.updatedAt != null}"
+             th:text="${schedule.updatedAt.format(T(java.time.format.DateTimeFormatter).ofPattern('yyyy-MM-dd HH:mm'))}">…</span>
+    </p>
+    <a th:href="@{/schedules}" class="btn btn-secondary">Back to List</a>
+    <a th:href="@{/schedules/edit/{id}(id=${schedule.id})}" class="btn btn-secondary">Edit</a>
+  </div>
+</body>
+</html>

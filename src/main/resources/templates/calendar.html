@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/default :: layout(~{::title},~{::content})}">
+<head>
+  <title th:fragment="title">My Schedule Calendar</title>
+  
+</head>
+<body>
+  <div th:fragment="content">
+    <div id="calendar" style="width: 85%; margin-left: auto; margin-right: auto; max-height: 100vh;"></div>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+          document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+              initialView: 'dayGridMonth',
+              events: /*[[${events}]]*/ [],
+              themeSystem: 'bootstrap5',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+            });
+            calendar.render();
+          });
+        /*]]>*/
+    </script>
+  </div>
+
+</body>
+</html>
